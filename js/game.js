@@ -144,22 +144,22 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function updatePlayer() {
-    if ("ArrowLeft" in keysPressed || "a" in keysPressed) {
+    if ("ArrowLeft" in keysPressed || "a" in keysPressed || "A" in keysPressed) {
       if (player.x > 0) {
         player.moveLeft();
       }
     }
-    if ("ArrowUp" in keysPressed || "w" in keysPressed) {
+    if ("ArrowUp" in keysPressed || "w" in keysPressed || "W" in keysPressed) {
       if (player.y > 0) {
         player.moveUp();
       }
     }
-    if ("ArrowRight" in keysPressed || "d" in keysPressed) {
+    if ("ArrowRight" in keysPressed || "d" in keysPressed || "D" in keysPressed) {
       if (player.x + player.size < canvas.width) {
         player.moveRight();
       }
     }
-    if ("ArrowDown" in keysPressed || "s" in keysPressed) {
+    if ("ArrowDown" in keysPressed || "s" in keysPressed || "S" in keysPressed) {
       if (player.y + player.size < canvas.height) {
         player.moveDown();
       }
