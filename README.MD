@@ -21,4 +21,4 @@ En este juego, tu objetivo es sobrevivir el mayor tiempo posible mientras dispar
 
 ## Cómo Ejecutar el Juego
 
-** Ingresar a https://trshgab.github.io/psycho-killer-game/ **
+**Ingresar a https://trshgab.github.io/psycho-killer-game/**
