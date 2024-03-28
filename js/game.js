@@ -70,40 +70,68 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function killPlayer() {
-    alert("Game Over! You were killed by an enemy bullet.");
-    location.reload();
-  }
+    const deathMessages = [
+        "╭∩╮( •̀_•́ )╭∩╮",
+        "ᶠᶸᶜᵏᵧₒᵤ!",
+        "(๑`^´๑)︻デ═一"
+    ];
+    const randomMessage = deathMessages[Math.floor(Math.random() * deathMessages.length)];
+    
+    const canvas = document.getElementById('gameCanvas');
+    canvas.classList.add('shake');
+    canvas.classList.add('red');
+    
+    setTimeout(() => {
+        canvas.classList.remove('shake');
+        setTimeout(() => {
+            canvas.classList.remove('red');
+            alert("Game Over! " + randomMessage);
+            location.reload();
+        }, 500);
+    }, 500);
+}
+
+
+
 
   function checkCollisions() {
     for (let i = bullets.length - 1; i >= 0; i--) {
-      const bullet = bullets[i];
+        const bullet = bullets[i];
 
-      if (bullet.isPlayerBullet) {
-        for (let j = enemies.length - 1; j >= 0; j--) {
-          const enemy = enemies[j];
-          if (
-            bullet.x < enemy.x + enemy.size &&
-            bullet.x + bullet.size > enemy.x &&
-            bullet.y < enemy.y + enemy.size &&
-            bullet.y + bullet.size > enemy.y
-          ) {
-            bullets.splice(i, 1); // Eliminar la bala del jugador
-            enemies.splice(j, 1); // Eliminar el enemigo
-            break; // Salir del bucle interno
-          }
+        if (bullet.isPlayerBullet) {
+            for (let j = enemies.length - 1; j >= 0; j--) {
+                const enemy = enemies[j];
+                if (
+                    bullet.x < enemy.x + enemy.size &&
+                    bullet.x + bullet.size > enemy.x &&
+                    bullet.y < enemy.y + enemy.size &&
+                    bullet.y + bullet.size > enemy.y
+                ) {
+                    bullets.splice(i, 1); // Eliminar la bala del jugador
+                    enemies.splice(j, 1); // Eliminar el enemigo
+                    break; // Salir del bucle interno
+                }
+            }
+        } else {
+            const playerLeft = player.x;
+            const playerRight = player.x + player.size;
+            const playerTop = player.y;
+            const playerBottom = player.y + player.size;
+
+            if (
+                bullet.x + bullet.size > playerLeft &&
+                bullet.x < playerRight &&
+                bullet.y + bullet.size > playerTop &&
+                bullet.y < playerBottom
+            ) {
+                killPlayer();
+                bullets.splice(i, 1); // Eliminar la bala del enemigo
+                break; // Salir del bucle
+            }
         }
-      } else {
-        const distanceToPlayer = Math.sqrt(
-          (player.x - bullet.x) ** 2 + (player.y - bullet.y) ** 2
-        );
-        if (distanceToPlayer < player.size / 2) {
-          killPlayer();
-          bullets.splice(i, 1); // Eliminar la bala del enemigo
-          break; // Salir del bucle
-        }
-      }
     }
-  }
+}
+
 
   const keysPressed = {};
 
@@ -138,6 +166,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  function checkPlayerCollision() {
+    for (let i = enemies.length - 1; i >= 0; i--) {
+        const enemy = enemies[i];
+        const distanceToPlayer = Math.sqrt((player.x - enemy.x) ** 2 + (player.y - enemy.y) ** 2);
+
+        if (distanceToPlayer < (player.size + enemy.size) / 2) { // Verificar si hay colisión entre jugador y enemigo
+            killPlayer(); // Llamar a la función para matar al jugador
+            return; // Salir de la función, ya que el jugador está muerto
+        }
+    }
+}
+
+
   canvas.addEventListener("mousedown", function (event) {
     const rect = canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
@@ -164,6 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
     updateBullets();
     moveBullets();
     checkCollisions();
+    checkPlayerCollision();
     player.draw(ctx);
     updatePlayer();
 
