@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function drawScore(){
     ctx.fillStyle = '#fff';
-    ctx.font = '20px Arial';
+    ctx.font = '20px Courier New, monospace';
     ctx.fillText('Puntos: ' + score, 10, 30);
   }
 
