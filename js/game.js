@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   canvas.width = 800;
   canvas.height = 600;
+
+  let score = 0;
   
   const player = new Player(canvas.width / 2, canvas.height / 2, 20, 5);
 
@@ -14,6 +16,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const enemies = [];
   const bullets = [];
+
+  function drawScore(){
+    ctx.fillStyle = '#fff';
+    ctx.font = '20px Arial';
+    ctx.fillText('Puntos: ' + score, 10, 30);
+  }
 
   function createEnemy() {
     const size = 20;
@@ -85,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
         canvas.classList.remove('shake');
         setTimeout(() => {
             canvas.classList.remove('red');
-            alert("Game Over! " + randomMessage);
+            alert("Hiciste "+ score + " puntos! " + randomMessage);
             location.reload();
         }, 500);
     }, 500);
@@ -93,44 +101,49 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
-  function checkCollisions() {
-    for (let i = bullets.length - 1; i >= 0; i--) {
-        const bullet = bullets[i];
-
-        if (bullet.isPlayerBullet) {
-            for (let j = enemies.length - 1; j >= 0; j--) {
-                const enemy = enemies[j];
-                if (
-                    bullet.x < enemy.x + enemy.size &&
-                    bullet.x + bullet.size > enemy.x &&
-                    bullet.y < enemy.y + enemy.size &&
-                    bullet.y + bullet.size > enemy.y
-                ) {
-                    bullets.splice(i, 1); // Eliminar la bala del jugador
-                    enemies.splice(j, 1); // Eliminar el enemigo
-                    break; // Salir del bucle interno
-                }
-            }
-        } else {
-            const playerLeft = player.x;
-            const playerRight = player.x + player.size;
-            const playerTop = player.y;
-            const playerBottom = player.y + player.size;
-
-            if (
-                bullet.x + bullet.size > playerLeft &&
-                bullet.x < playerRight &&
-                bullet.y + bullet.size > playerTop &&
-                bullet.y < playerBottom
-            ) {
-                killPlayer();
-                bullets.splice(i, 1); // Eliminar la bala del enemigo
-                break; // Salir del bucle
-            }
-        }
-    }
+function increaseScore() {
+  score += 100;
 }
+
+function checkCollisions() {
+  for (let i = bullets.length - 1; i >= 0; i--) {
+      const bullet = bullets[i];
+
+      if (bullet.isPlayerBullet) {
+          for (let j = enemies.length - 1; j >= 0; j--) {
+              const enemy = enemies[j];
+              if (
+                  bullet.x < enemy.x + enemy.size &&
+                  bullet.x + bullet.size > enemy.x &&
+                  bullet.y < enemy.y + enemy.size &&
+                  bullet.y + bullet.size > enemy.y
+              ) {
+                  bullets.splice(i, 1); // Eliminar la bala del jugador
+                  enemies.splice(j, 1); // Eliminar el enemigo
+                  increaseScore(); // Incrementar el puntaje
+                  break; // Salir del bucle interno
+              }
+          }
+      } else {
+          const playerLeft = player.x;
+          const playerRight = player.x + player.size;
+          const playerTop = player.y;
+          const playerBottom = player.y + player.size;
+
+          if (
+              bullet.x + bullet.size > playerLeft &&
+              bullet.x < playerRight &&
+              bullet.y + bullet.size > playerTop &&
+              bullet.y < playerBottom
+          ) {
+              killPlayer();
+              bullets.splice(i, 1); // Eliminar la bala del enemigo
+              break; // Salir del bucle
+          }
+      }
+  }
+}
+
 
 
   const keysPressed = {};
@@ -208,6 +221,8 @@ document.addEventListener("DOMContentLoaded", function () {
     checkPlayerCollision();
     player.draw(ctx);
     updatePlayer();
+
+    drawScore();
 
     requestAnimationFrame(update);
   }
