@@ -70,8 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Definir una función para calcular el intervalo de spawn según el puntaje
   function calculateSpawnInterval(score) {
     // Por ejemplo, podrías multiplicar el intervalo base por un factor que disminuya a medida que aumenta el puntaje
-    const baseInterval = 5000; // Intervalo base de 5 segundos
-    const factor = Math.max(1 - (score * 0.01), 0.5); // Factor que disminuye a medida que aumenta el puntaje
+    const baseInterval = 1000; // Intervalo base de 5 segundos
+    const factor = Math.max(1 - (score * 0.005), 0.5); // Factor que disminuye a medida que aumenta el puntaje
     return baseInterval * factor;
   }
 
