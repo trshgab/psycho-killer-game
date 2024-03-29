@@ -4,11 +4,16 @@ import Enemy from "./enemy.js";
 document.addEventListener("DOMContentLoaded", function () {
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
-
+  const overlay = document.getElementById("overlay");
+  const consoleText = document.getElementById("consoleText");
+  const restartButton = document.getElementById("restartButton");
+  
   canvas.width = 800;
   canvas.height = 600;
-
+  
+  let gamePaused = false;
   let score = 0;
+  let animationFrameId; // Almacena el ID del frame de animación
   
   const player = new Player(canvas.width / 2, canvas.height / 2, 20, 5);
 
@@ -22,6 +27,24 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.font = '20px Courier New, monospace';
     ctx.fillText('Puntos: ' + score, 10, 30);
   }
+
+  // Función para mostrar el overlay con el mensaje y el botón
+  function showOverlay(message) {
+    consoleText.textContent = message;
+    overlay.style.display = "flex";
+  }
+
+  // Función para ocultar el overlay
+  function hideOverlay() {
+    overlay.style.display = "none";
+  }
+
+  // Función para reiniciar el juego
+  function restartGame() {
+    location.reload();
+  }
+
+  restartButton.addEventListener("click", restartGame);
 
   function createEnemy() {
     const size = 20;
@@ -134,26 +157,37 @@ function updateEnemies() {
     });
   }
 
-  function killPlayer() {
-    const deathMessages = [
-        "╭∩╮( •̀_•́ )╭∩╮",
-        "ᶠᶸᶜᵏᵧₒᵤ!",
-        "(๑`^´๑)︻デ═一"
-    ];
-    const randomMessage = deathMessages[Math.floor(Math.random() * deathMessages.length)];
-    
-    const canvas = document.getElementById('gameCanvas');
-    canvas.classList.add('shake');
-    canvas.classList.add('red');
-    
-    setTimeout(() => {
-        canvas.classList.remove('shake');
-        setTimeout(() => {
-            canvas.classList.remove('red');
-            alert("Hiciste "+ score + " puntos! " + randomMessage);
-            location.reload();
-        }, 500);
-    }, 500);
+  function showDeathMessage(message) {
+    const deathMessageContainer = document.createElement('div');
+    deathMessageContainer.className = 'death-message';
+    deathMessageContainer.textContent = message;
+
+    // Agregar el mensaje de muerte al cuerpo del documento
+    document.body.appendChild(deathMessageContainer);
+}
+
+function killPlayer() {
+  const deathMessages = [
+      "╭∩╮( •̀_•́ )╭∩╮",
+      "ᶠᶸᶜᵏᵧₒᵤ!",
+      "(๑`^´๑)︻デ═一"
+  ];
+  const randomMessage = deathMessages[Math.floor(Math.random() * deathMessages.length)];
+  const message = `Hiciste ${score} puntos! ${randomMessage}`;
+
+  showOverlay(message);
+
+  // Agregar la clase 'shake' al canvas para aplicar el efecto de temblor
+  canvas.classList.add('shake');
+  canvas.classList.add('red');
+
+  // Detener el juego una vez que el jugador muere
+  gamePaused = true;
+
+  setTimeout(() => {
+      // Quitar la clase 'shake' después de un tiempo para detener el temblor
+      canvas.classList.remove('shake');
+  }, 500); // Ajusta el tiempo según lo deseado para el efecto de temblor
 }
 
 
@@ -237,6 +271,36 @@ function checkCollisions() {
     }
   }
 
+
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        togglePause();
+    }
+});
+
+
+function startGameLoop() {
+  if (!animationFrameId) { // Comprueba si el bucle de juego ya está en marcha
+      animationFrameId = requestAnimationFrame(update); // Comienza el bucle de juego
+  }
+}
+
+function stopGameLoop() {
+  cancelAnimationFrame(animationFrameId); // Detiene el bucle de juego
+  animationFrameId = null; // Resetea el ID del frame de animación
+}
+
+function togglePause() {
+  gamePaused = !gamePaused; // Cambia el estado de pausa
+
+  if (gamePaused) {
+      stopGameLoop(); // Si está pausado, detén el bucle de juego
+  } else {
+      startGameLoop(); // Si no está pausado, comienza el bucle de juego
+  }
+}
+
+
   function checkPlayerCollision() {
     for (let i = enemies.length - 1; i >= 0; i--) {
         const enemy = enemies[i];
@@ -270,20 +334,24 @@ function checkCollisions() {
   });
 
   function update() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!gamePaused) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    updateEnemies();
-    updateBullets();
-    moveBullets();
-    checkCollisions();
-    checkPlayerCollision();
-    player.draw(ctx);
-    updatePlayer();
+        updateEnemies();
+        updateBullets();
+        moveBullets();
+        checkCollisions();
+        checkPlayerCollision();
+        player.draw(ctx);
+        updatePlayer();
 
-    drawScore();
+        drawScore();
+    }
 
-    requestAnimationFrame(update);
-  }
+    animationFrameId = requestAnimationFrame(update); // Solicita el siguiente frame de animación
+}
+
+
 
   update();
 });
