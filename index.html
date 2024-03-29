@@ -75,21 +75,26 @@
 
     <script>
 
-        // Función para reproducir la música de fondo
-        function playBackgroundMusic() {
-            const backgroundMusic = document.getElementById("backgroundMusic");
-            if (backgroundMusic.paused) {
-                backgroundMusic.play();
-            }
-        }
+    // Función para obtener el estado de reproducción de la música del almacenamiento local
+    function getMusicState() {
+        return localStorage.getItem("musicState");
+    }
 
-        // Función para pausar la música de fondo
-        function pauseBackgroundMusic() {
-            const backgroundMusic = document.getElementById("backgroundMusic");
-            if (!backgroundMusic.paused) {
-                backgroundMusic.pause();
-            }
+    // Función para cargar y reproducir la música de fondo si estaba reproduciéndose
+    function loadBackgroundMusic() {
+        const backgroundMusic = document.getElementById("backgroundMusic");
+        const musicState = getMusicState();
+
+        if (musicState === "playing") {
+            backgroundMusic.play();
         }
+    }
+
+    // Reproducir la música de fondo al cargar la página del juego
+    window.addEventListener("load", function() {
+        loadBackgroundMusic();
+    });
+
 
         document.getElementById("playButton").addEventListener("click", function() {
             window.location.href = "game.html"; // Redirige a la página del juego al hacer clic en el botón

@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="assets/psychoKiller.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
     <canvas id="gameCanvas"></canvas>
     <div id="overlay">
         <div class="console-text" id="consoleText"></div>
@@ -14,6 +18,29 @@
       </div>
     <script src="js/game.js" type="module"></script>
 </body>
+<script>
+    // Función para obtener el estado de reproducción de la música del almacenamiento local
+    function getMusicState() {
+        return localStorage.getItem("musicState");
+    }
+
+    // Función para cargar y reproducir la música de fondo si estaba reproduciéndose
+    function loadBackgroundMusic() {
+        const backgroundMusic = document.getElementById("backgroundMusic");
+        const musicState = getMusicState();
+
+        if (musicState === "playing") {
+            backgroundMusic.play();
+        }
+    }
+
+    // Reproducir la música de fondo al cargar la página del juego
+    window.addEventListener("load", function() {
+        loadBackgroundMusic();
+    });
+</script>
 </html>
+
+
 
 

@@ -47,19 +47,24 @@ document.addEventListener("DOMContentLoaded", function () {
   restartButton.addEventListener("click", restartGame);
 
   function createEnemy() {
-    const size = 20;
-    const x = Math.random() * (canvas.width - size);
-    const y = Math.random() * (canvas.height - size);
 
-    const distanceToPlayer = Math.sqrt(
-      (player.x - x) ** 2 + (player.y - y) ** 2
-    );
-    if (distanceToPlayer < 100) {
-      return;
-    }
+    if(!gamePaused){
 
-    const enemy = new Enemy(x, y, size, "#00FF00");
-    enemies.push(enemy);
+      
+      const size = 20;
+      const x = Math.random() * (canvas.width - size);
+      const y = Math.random() * (canvas.height - size);
+      
+      const distanceToPlayer = Math.sqrt(
+        (player.x - x) ** 2 + (player.y - y) ** 2
+        );
+        if (distanceToPlayer < 100) {
+          return;
+        }
+        
+        const enemy = new Enemy(x, y, size, "#00FF00");
+        enemies.push(enemy);
+      }
   }
 
   // Definir una función para calcular el intervalo de spawn según el puntaje
