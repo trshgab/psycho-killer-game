@@ -39,29 +39,86 @@ document.addEventListener("DOMContentLoaded", function () {
     enemies.push(enemy);
   }
 
-  setInterval(createEnemy, 5000);
+  // Definir una función para calcular el intervalo de spawn según el puntaje
+  function calculateSpawnInterval(score) {
+    // Por ejemplo, podrías multiplicar el intervalo base por un factor que disminuya a medida que aumenta el puntaje
+    const baseInterval = 5000; // Intervalo base de 5 segundos
+    const factor = Math.max(1 - (score * 0.01), 0.5); // Factor que disminuye a medida que aumenta el puntaje
+    return baseInterval * factor;
+  }
 
-  function updateEnemies() {
-    enemies.forEach((enemy) => {
+  // Modificar el setInterval para usar la función de cálculo de intervalo
+  setInterval(() => createEnemy(), calculateSpawnInterval(score));
+
+  function flashBackground() {
+    const body = document.querySelector('body');
+    body.classList.add('flash'); // Agregar la clase para el efecto de flash
+
+    // Crear un elemento de texto frenético
+    const freneticText = document.createElement('div');
+    freneticText.classList.add('frenetic-text');
+    freneticText.textContent = getRandomFreneticMessage();
+    body.appendChild(freneticText);
+
+    // Remover el elemento de texto después de un corto tiempo para revertir el efecto
+    setTimeout(() => {
+        freneticText.remove();
+        body.classList.remove('flash');
+    }, 200); // Ajusta el tiempo según lo que desees para el efecto de titilación
+}
+
+
+
+function getRandomFreneticMessage() {
+    const freneticMessages = [
+        "╭∩╮( •̀_•́ )╭∩╮",
+        "ᶠᶸᶜᵏᵧₒᵤ!",
+        "(๑`^´๑)︻デ═一",
+        "¿̴͚͖̇̌̀̏͋͒͝͝q̷̛̛̰̀̏̓ṳ̶̝͙͚̖̦͒̏̈̕ę̷̟͇̥͎͖̀̾̀́̆͛͠?̴̛̮̣̳̥̪̽̅ ¿̴͚͖̇̌̀̏͋͒͝͝q̷̛̛̰̀̏̓ṳ̶̝͙͚̖̦͒̏̈̕ę̷̟͇̥͎͖̀̾̀́̆͛͠ ¿̴͚͖̇̌̀̏͋͒͝͝q̷̛̛̰̀̏̓ṳ̶̝͙͚̖̦͒̏̈̕ę̷̟͇̥͎͖̀̾̀́̆͛͠ ¿̴͚͖̇̌̀̏͋͒͝͝q̷̛̛̰̀̏̓ṳ̶̝͙͚̖̦͒̏̈̕ę̷̟͇̥͎͖̀̾̀́̆͛͠ ¿̴͚͖̇̌̀̏͋͒͝͝q̷̛̛̰̀̏̓ṳ̶̝͙͚̖̦͒̏̈̕ę̷̟͇̥͎͖̀̾̀́̆͛͠",
+        "n̴̰͕̽̊̆͛̂͗̔̅͑̐̐ȯ̷̡̬̙̥̼͕̈́̈̓̓̑́̊̂͌͝͠ ̵̬͐̈́̅̑͘n̷̪̭̪̤̥͚͉̯̫̪̔̎͐̎͜͝ͅö̸̩͔̼̻͎̤̟̪̒͒̃̀́̊͋͜͝ ̴̨͇͓̯̟̤̯̱̒̊̕͠n̷͚̝̞͖̽̆͆̉͑̽̀ǫ̸̧̨̺͚̟̜̖̿͘̕̕ ̵̩̾ṇ̶͊̏͊̄͘ö̴̫́ ̵̨̛̰̼̤́̐͋̑̉̔͒̓̋̓n̶̛͉̈́̎̉̎͗̋̊̕o̵͉̔ ̶͍͍̫͖̋̍̎̋̆̈́̀̂n̷̗̻̳̫͌̿͂͂̑̊̋́͑̋͂͘͝õ̷̢̳̌̑̏̓̀",
+        "el tiempo es como una montaña",
+
+    ];
+    return freneticMessages[Math.floor(Math.random() * freneticMessages.length)];
+}
+
+  // Modificar la función updateEnemies para que los enemigos sigan al jugador
+function updateEnemies() {
+  enemies.forEach((enemy) => {
       enemy.draw(ctx);
 
+      // Calcular la dirección hacia el jugador
+      const angle = Math.atan2(player.y - enemy.y, player.x - enemy.x);
+
+      // Calcular la velocidad de seguimiento (la mitad de la velocidad del jugador)
+      const speed = player.speed / 2;
+
+      // Calcular las componentes de velocidad en x e y basadas en el ángulo y la velocidad de seguimiento
+      const speedX = Math.cos(angle) * speed;
+      const speedY = Math.sin(angle) * speed;
+
+      // Mover al enemigo hacia el jugador
+      enemy.x += speedX;
+      enemy.y += speedY;
+
+      // Disparar una bala si pasa cierto tiempo
       if (Math.random() < 0.01) {
-        const angle = Math.atan2(player.y - enemy.y, player.x - enemy.x);
+          const bullet = {
+              x: enemy.x + enemy.size / 2,
+              y: enemy.y + enemy.size / 2,
+              size: 5,
+              color: "#FF0000",
+              speedX: speedX * 2, // Disparo a doble velocidad de seguimiento
+              speedY: speedY * 2,
+              isPlayerBullet: false,
+          };
 
-        const bullet = {
-          x: enemy.x + enemy.size / 2,
-          y: enemy.y + enemy.size / 2,
-          size: 5,
-          color: "#FF0000",
-          speedX: Math.cos(angle) * 5,
-          speedY: Math.sin(angle) * 5,
-          isPlayerBullet: false,
-        };
-
-        bullets.push(bullet);
+          bullets.push(bullet);
       }
-    });
-  }
+  });
+}
+
+
 
   function updateBullets() {
     bullets.forEach((bullet) => {
@@ -121,6 +178,7 @@ function checkCollisions() {
                   bullets.splice(i, 1); // Eliminar la bala del jugador
                   enemies.splice(j, 1); // Eliminar el enemigo
                   increaseScore(); // Incrementar el puntaje
+                  flashBackground();
                   break; // Salir del bucle interno
               }
           }

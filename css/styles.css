@@ -9,6 +9,7 @@ body {
 }
 
 canvas {
+    background-color: #000;
     border: 2px solid #fff;
 }
 
@@ -37,6 +38,32 @@ canvas {
         transform: translate(5px, 0);
     }
 }
+
+@keyframes flash {
+    from {
+        background-color: black;
+    }
+    to {
+        background-color: white;
+    }
+}
+
+.flash {
+    animation: flash 0.1s alternate infinite;
+}
+
+
+.frenetic-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Courier New', Courier, monospace; /* Cambia la fuente según lo requerido */
+    font-size: 24px; /* Ajusta el tamaño de fuente según lo deseado */
+    color: red; /* Color del texto frenético */
+}
+
+
 
 
   
