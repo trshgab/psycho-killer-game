@@ -8,14 +8,34 @@
 </head>
 <body>
     <audio id="backgroundMusic" autoplay loop>
-        <source src="assets/psychoKiller.mp3" type="audio/mpeg">
+        <source src="assets/Death Grips POSTSYNDROME.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
     </audio>
     <canvas id="gameCanvas"></canvas>
     <div id="overlay">
         <div class="console-text" id="consoleText"></div>
         <button id="restartButton">Reiniciar</button>
-      </div>
+    </div>
+
+    <!-- Leaderboard -->
+<div id="leaderboard" class="leaderboard">
+    <h2>Leaderboard</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Posición</th>
+                <th>Nombre</th>
+                <th>Puntuación</th>
+            </tr>
+        </thead>
+        <tbody id="leaderboardBody">
+            <!-- Aquí se llenarán las filas de la tabla con los datos del leaderboard -->
+        </tbody>
+    </table>
+</div>
+
+
+    
     <script src="js/game.js" type="module"></script>
 </body>
 <script>

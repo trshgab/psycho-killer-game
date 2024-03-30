@@ -8,6 +8,42 @@ document.addEventListener("DOMContentLoaded", function () {
   const consoleText = document.getElementById("consoleText");
   const restartButton = document.getElementById("restartButton");
   
+
+  // Función para guardar la puntuación del jugador en el almacenamiento local
+  function saveScore(name, score) {
+    const existingScores = JSON.parse(localStorage.getItem("scores")) || [];
+    const newScore = { name, score };
+    existingScores.push(newScore);
+    localStorage.setItem("scores", JSON.stringify(existingScores));
+
+    // Mostrar el leaderboard después de guardar la puntuación
+    showLeaderboard();
+}
+
+// Función para mostrar el leaderboard
+function showLeaderboard() {
+  const leaderboardBody = document.getElementById("leaderboardBody");
+  leaderboardBody.innerHTML = ""; // Limpiar el contenido anterior
+
+  const scores = JSON.parse(localStorage.getItem("scores")) || [];
+  scores.sort((a, b) => b.score - a.score); // Ordenar puntuaciones de mayor a menor
+
+  const topScores = scores.slice(0, 5); // Obtener solo los 5 primeros puntajes
+
+  topScores.forEach((score, index) => {
+      const row = `<tr>
+          <td>${index + 1}</td>
+          <td>${score.name}</td>
+          <td>${score.score}</td>
+      </tr>`;
+      leaderboardBody.innerHTML += row;
+  });
+}
+
+
+
+window.onload = showLeaderboard;
+  
   canvas.width = 800;
   canvas.height = 600;
   
@@ -41,8 +77,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Función para reiniciar el juego
   function restartGame() {
+    // Obtener el nombre del jugador
+    const playerName = prompt("Ingresa tu nombre (máximo 6 caracteres):");
+    const trimmedName = playerName.trim().substring(0, 6); // Limitar el nombre a 6 caracteres
+
+    // Guardar la puntuación del jugador
+    saveScore(trimmedName, score);
+
+    // Reiniciar el juego
     location.reload();
-  }
+}
 
   restartButton.addEventListener("click", restartGame);
 
@@ -105,6 +149,10 @@ function getRandomFreneticMessage() {
         "¿̴͚͖̇̌̀̏͋͒͝͝q̷̛̛̰̀̏̓ṳ̶̝͙͚̖̦͒̏̈̕ę̷̟͇̥͎͖̀̾̀́̆͛͠?̴̛̮̣̳̥̪̽̅ ¿̴͚͖̇̌̀̏͋͒͝͝q̷̛̛̰̀̏̓ṳ̶̝͙͚̖̦͒̏̈̕ę̷̟͇̥͎͖̀̾̀́̆͛͠ ¿̴͚͖̇̌̀̏͋͒͝͝q̷̛̛̰̀̏̓ṳ̶̝͙͚̖̦͒̏̈̕ę̷̟͇̥͎͖̀̾̀́̆͛͠ ¿̴͚͖̇̌̀̏͋͒͝͝q̷̛̛̰̀̏̓ṳ̶̝͙͚̖̦͒̏̈̕ę̷̟͇̥͎͖̀̾̀́̆͛͠ ¿̴͚͖̇̌̀̏͋͒͝͝q̷̛̛̰̀̏̓ṳ̶̝͙͚̖̦͒̏̈̕ę̷̟͇̥͎͖̀̾̀́̆͛͠",
         "n̴̰͕̽̊̆͛̂͗̔̅͑̐̐ȯ̷̡̬̙̥̼͕̈́̈̓̓̑́̊̂͌͝͠ ̵̬͐̈́̅̑͘n̷̪̭̪̤̥͚͉̯̫̪̔̎͐̎͜͝ͅö̸̩͔̼̻͎̤̟̪̒͒̃̀́̊͋͜͝ ̴̨͇͓̯̟̤̯̱̒̊̕͠n̷͚̝̞͖̽̆͆̉͑̽̀ǫ̸̧̨̺͚̟̜̖̿͘̕̕ ̵̩̾ṇ̶͊̏͊̄͘ö̴̫́ ̵̨̛̰̼̤́̐͋̑̉̔͒̓̋̓n̶̛͉̈́̎̉̎͗̋̊̕o̵͉̔ ̶͍͍̫͖̋̍̎̋̆̈́̀̂n̷̗̻̳̫͌̿͂͂̑̊̋́͑̋͂͘͝õ̷̢̳̌̑̏̓̀",
         "el tiempo es como una montaña",
+        "La vida es como una ventana"
+        +" a veces es de aluminio y otras de pvc"
+        + " aunque hay quien dice que lo mejor"
+        + " es la madera por todo el tema del puente térmico y eso"
 
     ];
     return freneticMessages[Math.floor(Math.random() * freneticMessages.length)];

@@ -88,6 +88,46 @@ canvas {
   button:hover {
     background-color: #ccc;
   }
+
+  /* Estilos para el leaderboard */
+.leaderboard {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 10px;
+  border-radius: 10px;
+  font-family: 'Courier New', monospace;
+}
+
+.leaderboard h2 {
+  margin: 0 0 10px;
+  font-size: 1.5em;
+}
+
+.leaderboard table {
+  width: 100%;
+}
+
+.leaderboard th, .leaderboard td {
+  padding: 8px 0;
+  text-align: center;
+}
+
+.leaderboard th {
+  font-weight: bold;
+}
+
+@media screen and (max-width: 600px) {
+  /* Estilos para pantallas pequeñas */
+  .leaderboard {
+      top: auto;
+      bottom: 20px;
+      right: 20px;
+      left: 20px;
+  }
+}
+
   
 
 
