@@ -22,22 +22,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Función para mostrar el leaderboard
 function showLeaderboard() {
-  const leaderboardBody = document.getElementById("leaderboardBody");
-  leaderboardBody.innerHTML = ""; // Limpiar el contenido anterior
+    const leaderboardBody = document.getElementById("leaderboardBody");
+    leaderboardBody.innerHTML = ""; // Limpiar el contenido anterior
 
-  const scores = JSON.parse(localStorage.getItem("scores")) || [];
-  scores.sort((a, b) => b.score - a.score); // Ordenar puntuaciones de mayor a menor
+    const scores = JSON.parse(localStorage.getItem("scores")) || [];
+    scores.sort((a, b) => b.score - a.score); // Ordenar puntuaciones de mayor a menor
 
-  const topScores = scores.slice(0, 5); // Obtener solo los 5 primeros puntajes
+    const topScores = scores.slice(0, 5); // Obtener solo los 5 primeros puntajes
 
-  topScores.forEach((score, index) => {
-      const row = `<tr>
-          <td>${index + 1}</td>
-          <td>${score.name}</td>
-          <td>${score.score}</td>
-      </tr>`;
-      leaderboardBody.innerHTML += row;
-  });
+    topScores.forEach((score, index) => {
+        const row = `<tr>
+            <td>${index + 1}</td>
+            <td>${score.name}</td>
+            <td>${score.score}</td>
+        </tr>`;
+        leaderboardBody.innerHTML += row;
+    });
 }
 
 

@@ -92,12 +92,13 @@ canvas {
   /* Estilos para el leaderboard */
 .leaderboard {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: rgba(255, 255, 255, 0.7);
+  top: 10px;  
+  right: 10px;
+  color: #fff;
   padding: 10px;
-  border-radius: 10px;
   font-family: 'Courier New', monospace;
+  background-color: #000;
+    border: 2px solid #fff;
 }
 
 .leaderboard h2 {
